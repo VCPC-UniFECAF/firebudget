@@ -1,19 +1,39 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
-function Login({ onForgotPassword, onRegister, onLogin }) {
+function Login() {
+  const navigate = useNavigate()
+  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [keepLoggedIn, setKeepLoggedIn] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Implementar lógica de login aqui
-    console.log('Login:', { email, password, keepLoggedIn })
-    // Após login bem-sucedido, chamar onLogin
-    if (onLogin) {
-      onLogin()
+    setError('')
+    
+    // Validação customizada: permite "admin" ou email válido
+    const isValidEmail = email === 'admin' || email.includes('@')
+    if (!isValidEmail) {
+      setError('Por favor, insira um email válido ou use "admin"')
+      return
     }
+
+    setLoading(true)
+
+    const result = await login(email, password)
+
+    if (result.success) {
+      navigate('/home')
+    } else {
+      setError(result.error)
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -28,8 +48,8 @@ function Login({ onForgotPassword, onRegister, onLogin }) {
               {/* Email Input */}
               <div className="relative">
                 <input
-                  type="email"
-                  placeholder="E-mail"
+                  type="text"
+                  placeholder="E-mail ou usuário"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-gray-900 text-gray-300 placeholder-purple-300/50 px-4 py-3 pr-12 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
@@ -126,29 +146,35 @@ function Login({ onForgotPassword, onRegister, onLogin }) {
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02]"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ borderRadius: '0.55rem' }}
               >
-                Entrar
+                {loading ? 'Entrando...' : 'Entrar'}
               </button>
             </form>
 
+            {/* Error Message */}
+            {error && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
             {/* Links */}
             <div className="mt-6 flex justify-center space-x-4">
-              <button
-                type="button"
-                onClick={onRegister}
+              <Link
+                to="/register"
                 className="text-purple-600 hover:text-purple-700 font-medium bg-transparent border-none cursor-pointer"
               >
                 Criar conta
-              </button>
-              <button
-                type="button"
-                onClick={onForgotPassword}
+              </Link>
+              <Link
+                to="/forgot-password"
                 className="text-gray-500 hover:text-gray-600 underline bg-transparent border-none cursor-pointer"
               >
                 Esqueceu a senha
-              </button>
+              </Link>
             </div>
 
             {/* Divider */}

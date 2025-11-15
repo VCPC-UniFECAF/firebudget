@@ -1,6 +1,10 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
-function Register({ onBack }) {
+function Register() {
+  const navigate = useNavigate()
+  const { register } = useAuth()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -8,11 +12,39 @@ function Register({ onBack }) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [acceptTerms, setAcceptTerms] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Implementar lógica de cadastro aqui
-    console.log('Cadastro:', { fullName, email, password, confirmPassword, acceptTerms })
+    setError('')
+
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem')
+      return
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres')
+      return
+    }
+
+    if (!acceptTerms) {
+      setError('Você deve aceitar os termos de acesso')
+      return
+    }
+
+    setLoading(true)
+
+    const result = await register(fullName, email, password)
+
+    if (result.success) {
+      navigate('/home')
+    } else {
+      setError(result.error)
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -209,22 +241,29 @@ function Register({ onBack }) {
               {/* Register Button */}
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02]"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ borderRadius: '0.55rem' }}
               >
-                Cadastrar
+                {loading ? 'Cadastrando...' : 'Cadastrar'}
               </button>
             </form>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             
             {/* Back to Login Button */}
             <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={onBack}
+              <Link
+                to="/login"
                 className="text-purple-600 hover:text-purple-700 font-medium text-sm underline bg-transparent border-none cursor-pointer"
               >
                 Voltar para login
-              </button>
+              </Link>
             </div>
           </div>
         </div>

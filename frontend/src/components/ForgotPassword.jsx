@@ -1,16 +1,45 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { authService } from '../services/api'
 
-function ForgotPassword({ onBack }) {
+function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Implementar lógica de redefinição de senha aqui
-    console.log('Redefinir senha:', { email, password, confirmPassword })
+    setError('')
+    setSuccess('')
+
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem')
+      return
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      await authService.resetPassword(email, password, confirmPassword)
+      setSuccess('Senha redefinida com sucesso! Redirecionando para login...')
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 2000)
+    } catch (error) {
+      setError(error.response?.data?.message || 'Erro ao redefinir senha')
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -162,22 +191,36 @@ function ForgotPassword({ onBack }) {
               {/* Reset Password Button */}
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02] mt-8"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 shadow-lg hover:from-purple-700 hover:to-purple-800 transition transform hover:scale-[1.02] mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ borderRadius: '0.55rem' }}
               >
-                Redefinir senha
+                {loading ? 'Redefinindo...' : 'Redefinir senha'}
               </button>
             </form>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Success Message */}
+            {success && (
+              <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm">
+                {success}
+              </div>
+            )}
             
             {/* Back to Login Button */}
             <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={onBack}
+              <Link
+                to="/login"
                 className="text-purple-600 hover:text-purple-700 font-medium text-sm underline bg-transparent border-none cursor-pointer"
               >
                 Voltar para login
-              </button>
+              </Link>
             </div>
           </div>
         </div>
