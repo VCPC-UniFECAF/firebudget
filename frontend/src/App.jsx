@@ -1,32 +1,69 @@
-import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import BackgroundAnimation from './components/BackgroundAnimation'
 import Login from './components/Login'
 import ForgotPassword from './components/ForgotPassword'
 import Register from './components/Register'
 import Home from './components/Home'
+import Calendar from './components/Calendar'
+import Transactions from './components/Transactions'
+import Rewards from './components/Rewards'
+import Settings from './components/Settings'
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('login')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  // Se autenticado, mostrar Home
-  if (isAuthenticated) {
-    return <Home />
-  }
-
-  if (currentScreen === 'forgotPassword') {
-    return <ForgotPassword onBack={() => setCurrentScreen('login')} />
-  }
-
-  if (currentScreen === 'register') {
-    return <Register onBack={() => setCurrentScreen('login')} />
-  }
-
   return (
-    <Login
-      onForgotPassword={() => setCurrentScreen('forgotPassword')}
-      onRegister={() => setCurrentScreen('register')}
-      onLogin={() => setIsAuthenticated(true)}
-    />
+    <AuthProvider>
+      <BackgroundAnimation />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedRoute>
+                <Calendar />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <ProtectedRoute>
+                <Transactions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rewards"
+            element={
+              <ProtectedRoute>
+                <Rewards />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 
