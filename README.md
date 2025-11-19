@@ -1,6 +1,6 @@
 # FireBudget
 
-Plataforma de controle financeiro com integração bancária através da Belvo API.
+Plataforma de controle financeiro com integração bancária através da Pluggy API.
 
 ## Estrutura do Projeto
 
@@ -10,13 +10,13 @@ firebudget/
 │   ├── src/
 │   │   ├── main.rs
 │   │   ├── config.rs
-│   │   └── belvo/
+│   │   └── pluggy/
 │   │       ├── mod.rs
 │   │       ├── client.rs
 │   │       └── models.rs
 │   ├── Cargo.toml
 │   └── .env.example
-└── frontend/         # Espaço reservado para frontend
+└── frontend/         # Frontend React
 ```
 
 ## Configuração do Backend
@@ -26,7 +26,7 @@ firebudget/
 - Rust (versão 1.80 ou superior recomendada)
   - Para atualizar o Rust: `rustup update stable`
 - Cargo (gerenciador de pacotes do Rust)
-- Credenciais da Belvo API (obtenha em https://developers.belvo.com/)
+- Credenciais da Pluggy API (obtenha em https://pluggy.ai/)
 
 **Nota:** Se você encontrar erros de compilação relacionados a versões do Rust, atualize para a versão mais recente usando `rustup update stable`.
 
@@ -42,11 +42,11 @@ cd backend
 cp .env.example .env
 ```
 
-3. Edite o arquivo `.env` e adicione suas credenciais da Belvo:
+3. Edite o arquivo `.env` e adicione suas credenciais da Pluggy:
 ```
-BELVO_SECRET_ID=seu_secret_id_aqui
-BELVO_SECRET_PASSWORD=sua_secret_password_aqui
-BELVO_ENV=sandbox
+PLUGGY_CLIENT_ID=seu_client_id_aqui
+PLUGGY_CLIENT_SECRET=seu_client_secret_aqui
+PLUGGY_ENV=sandbox
 ```
 
 4. Compile e execute o projeto:
@@ -54,11 +54,11 @@ BELVO_ENV=sandbox
 cargo run
 ```
 
-## Funcionalidades da Belvo API
+## Funcionalidades da Pluggy API
 
 O backend está configurado com as seguintes funcionalidades:
 
-- **Autenticação**: Autenticação OAuth2 com renovação automática de token
+- **Autenticação**: Autenticação com renovação automática de token
 - **Links**: Criação e listagem de links bancários
 - **Contas**: Busca de contas bancárias
 - **Transações**: Extração de transações bancárias
@@ -70,12 +70,12 @@ O backend está configurado com as seguintes funcionalidades:
 
 - `main.rs`: Ponto de entrada da aplicação e teste de conexão
 - `config.rs`: Gerenciamento de configurações e variáveis de ambiente
-- `belvo/client.rs`: Cliente HTTP para interação com a API Belvo
-- `belvo/models.rs`: Modelos de dados para serialização/deserialização
+- `pluggy/client.rs`: Cliente HTTP para interação com a API Pluggy
+- `pluggy/models.rs`: Modelos de dados para serialização/deserialização
 
 ### Testes
 
-Para testar a conexão com a Belvo API:
+Para testar a conexão com a Pluggy API:
 
 ```bash
 cd backend
@@ -84,19 +84,18 @@ cargo run
 
 O programa irá:
 1. Carregar as configurações do arquivo `.env`
-2. Autenticar na API Belvo
+2. Autenticar na API Pluggy
 3. Exibir mensagem de confirmação se a conexão for bem-sucedida
 
 ## Próximos Passos
 
-- Implementar endpoints REST para expor funcionalidades da Belvo
+- Implementar endpoints REST para expor funcionalidades da Pluggy
 - Adicionar tratamento de erros mais robusto
 - Implementar cache de tokens
 - Desenvolver frontend para interface do usuário
 
 ## Documentação
 
-- [Belvo API Documentation](https://developers.belvo.com/)
+- [Pluggy API Documentation](https://pluggy.ai/)
 - [Rocket Framework](https://rocket.rs/)
 - [Rust Book](https://doc.rust-lang.org/book/)
-
