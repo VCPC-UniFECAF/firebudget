@@ -116,6 +116,14 @@ export const linkService = {
   },
 }
 
+// Serviços da Pluggy
+export const pluggyService = {
+  async getConnectToken() {
+    const response = await api.post('/api/pluggy/connect-token')
+    return response.data
+  },
+}
+
 export default api
 
 

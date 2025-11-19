@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { transactionService, accountService } from '../services/api'
+import PluggyConnectModal from './PluggyConnectModal'
 
 function Home() {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ function Home() {
   const [balance, setBalance] = useState(10900.0)
   const [totalExpenses, setTotalExpenses] = useState(5870.9)
   const [totalSaved, setTotalSaved] = useState(3500.0)
+  const [isPluggyModalOpen, setIsPluggyModalOpen] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -316,7 +318,10 @@ function Home() {
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">Meus Cartões</h2>
-                    <button className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                    <button 
+                      onClick={() => setIsPluggyModalOpen(true)}
+                      className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition"
+                    >
                       <span className="text-xl font-bold">+</span>
                     </button>
                   </div>
@@ -372,6 +377,12 @@ function Home() {
           </div>
         </div>
       </div>
+
+      {/* Modal Pluggy Connect */}
+      <PluggyConnectModal 
+        isOpen={isPluggyModalOpen} 
+        onClose={() => setIsPluggyModalOpen(false)} 
+      />
     </div>
   )
 }
