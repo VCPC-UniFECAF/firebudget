@@ -94,10 +94,10 @@ export const accountService = {
   },
 }
 
-// Serviços de links bancários (Belvo)
+// Serviços de links bancários
 export const linkService = {
   async createLink(institution, username, password) {
-    const response = await api.post('/links', {
+    const response = await api.post('/api/links', {
       institution,
       username,
       password,
@@ -106,7 +106,12 @@ export const linkService = {
   },
 
   async getLinks() {
-    const response = await api.get('/links')
+    const response = await api.get('/api/links')
+    return response.data
+  },
+
+  async getLinkData(linkId) {
+    const response = await api.get(`/api/links/${linkId}/data`)
     return response.data
   },
 }

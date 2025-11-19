@@ -1,31 +1,31 @@
 use std::env;
 
-pub struct BelvoConfig {
-    pub secret_id: String,
-    pub secret_password: String,
+pub struct PluggyConfig {
+    pub client_id: String,
+    pub client_secret: String,
     pub environment: String,
     pub base_url: String,
 }
 
-impl BelvoConfig {
+impl PluggyConfig {
     pub fn from_env() -> anyhow::Result<Self> {
-        let secret_id = env::var("BELVO_SECRET_ID")
-            .map_err(|_| anyhow::anyhow!("BELVO_SECRET_ID não encontrada"))?;
+        let client_id = env::var("PLUGGY_CLIENT_ID")
+            .map_err(|_| anyhow::anyhow!("PLUGGY_CLIENT_ID não encontrada"))?;
         
-        let secret_password = env::var("BELVO_SECRET_PASSWORD")
-            .map_err(|_| anyhow::anyhow!("BELVO_SECRET_PASSWORD não encontrada"))?;
+        let client_secret = env::var("PLUGGY_CLIENT_SECRET")
+            .map_err(|_| anyhow::anyhow!("PLUGGY_CLIENT_SECRET não encontrada"))?;
         
-        let environment = env::var("BELVO_ENV").unwrap_or_else(|_| "sandbox".to_string());
+        let environment = env::var("PLUGGY_ENV").unwrap_or_else(|_| "sandbox".to_string());
         
         let base_url = match environment.as_str() {
-            "production" => "https://api.belvo.com",
-            "sandbox" => "https://sandbox.belvo.com",
-            _ => "https://sandbox.belvo.com",
+            "production" => "https://api.pluggy.ai",
+            "sandbox" => "https://api.pluggy.ai",
+            _ => "https://api.pluggy.ai",
         };
 
-        Ok(BelvoConfig {
-            secret_id,
-            secret_password,
+        Ok(PluggyConfig {
+            client_id,
+            client_secret,
             environment,
             base_url: base_url.to_string(),
         })
