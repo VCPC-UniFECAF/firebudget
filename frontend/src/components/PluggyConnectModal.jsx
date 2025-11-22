@@ -47,11 +47,28 @@ function PluggyConnectModal({ isOpen, onClose }) {
         // O PluggyConnect cria seu próprio modal, então não precisamos do container
         const config = {
           connectToken: connectToken,
-          onSuccess: (item) => {
-            console.log('Conexão bem-sucedida:', item)
+          onSuccess: async (data) => {
+            console.log('Conexão bem-sucedida:', data)
+            try {
+              // O objeto retornado pode variar dependendo da versão do widget
+              // Geralmente é { id: "..." } ou { item: { id: "..." } }
+              const item = data.item || data
+              const itemId = item.id
+              
+              if (!itemId) {
+                console.error('ID do item não encontrado na resposta:', data)
+                throw new Error('ID do item não encontrado')
+              }
+
+              // Registra o item no backend para iniciar o sync
+              await pluggyService.createItem(itemId)
+              console.log('Item registrado no backend para sincronização')
+            } catch (error) {
+              console.error('Erro ao registrar item no backend:', error)
+            }
             onClose()
-            // Aqui você pode adicionar lógica para atualizar a lista de contas
-            // Por exemplo, recarregar a lista de contas ou mostrar uma mensagem de sucesso
+            // Dispara evento para atualizar a home
+            window.dispatchEvent(new Event('pluggy-item-created'))
           },
           onError: (error) => {
             console.error('Erro ao conectar:', error)

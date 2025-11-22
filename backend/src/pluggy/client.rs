@@ -1,18 +1,18 @@
 use crate::pluggy::models::*;
-use crate::config::PluggyConfig;
+use crate::config::AppConfig;
 use anyhow::Result;
 use reqwest::Client;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub struct PluggyClient {
     client: Client,
-    config: PluggyConfig,
+    config: AppConfig,
     api_key: Option<String>,
     api_key_expires_at: Option<u64>,
 }
 
 impl PluggyClient {
-    pub fn new(config: PluggyConfig) -> Self {
+    pub fn new(config: AppConfig) -> Self {
         PluggyClient {
             client: Client::new(),
             config,

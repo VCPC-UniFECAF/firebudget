@@ -1,0 +1,36 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO items (id, pluggy_item_id, user_id, status)\n        VALUES ($1, $2, $3, 'UPDATED')\n        ON CONFLICT (pluggy_item_id) DO UPDATE SET updated_at = CURRENT_TIMESTAMP\n        RETURNING id, pluggy_item_id, status\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "pluggy_item_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "status",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "db48ddaf647fd1d2d4478101b3b9ff25fabffcd725c9f8f9d5484cf7b1e84c49"
+}

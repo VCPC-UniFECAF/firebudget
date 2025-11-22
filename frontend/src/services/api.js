@@ -70,13 +70,23 @@ export const authService = {
 
 // Serviços de transações
 export const transactionService = {
-  async getTransactions(period = 'week') {
-    const response = await api.get(`/transactions?period=${period}`)
+  async getTransactions() {
+    const response = await api.get('/transactions')
     return response.data
   },
 
   async createTransaction(transaction) {
     const response = await api.post('/transactions', transaction)
+    return response.data
+  },
+
+  async updateTransaction(id, transaction) {
+    const response = await api.put(`/transactions/${id}`, transaction)
+    return response.data
+  },
+
+  async deleteTransaction(id) {
+    const response = await api.delete(`/transactions/${id}`)
     return response.data
   },
 }
@@ -120,6 +130,11 @@ export const linkService = {
 export const pluggyService = {
   async getConnectToken() {
     const response = await api.post('/api/pluggy/connect-token')
+    return response.data
+  },
+
+  async createItem(itemId) {
+    const response = await api.post('/items', { item_id: itemId })
     return response.data
   },
 }

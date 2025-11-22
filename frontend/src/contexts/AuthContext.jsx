@@ -37,23 +37,6 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = async (email, password) => {
-    // Credenciais admin padrão para desenvolvimento
-    if (email === 'admin' && password === 'admin') {
-      const adminUser = {
-        fullName: 'Administrador',
-        email: 'admin',
-        role: 'admin'
-      }
-      const adminToken = 'admin_token_' + Date.now()
-      
-      localStorage.setItem('token', adminToken)
-      localStorage.setItem('user', JSON.stringify(adminUser))
-      setUser(adminUser)
-      setIsAuthenticated(true)
-
-      return { success: true }
-    }
-
     try {
       const response = await authService.login(email, password)
       const { token, user: userData } = response
@@ -65,23 +48,6 @@ export function AuthProvider({ children }) {
 
       return { success: true }
     } catch (error) {
-      // Se a API falhar, verifica se são credenciais admin (fallback)
-      if (email === 'admin' && password === 'admin') {
-        const adminUser = {
-          fullName: 'Administrador',
-          email: 'admin',
-          role: 'admin'
-        }
-        const adminToken = 'admin_token_' + Date.now()
-        
-        localStorage.setItem('token', adminToken)
-        localStorage.setItem('user', JSON.stringify(adminUser))
-        setUser(adminUser)
-        setIsAuthenticated(true)
-
-        return { success: true }
-      }
-
       return {
         success: false,
         error: error.response?.data?.message || 'Erro ao fazer login',

@@ -16,10 +16,10 @@ function Login() {
     e.preventDefault()
     setError('')
     
-    // Validação customizada: permite "admin" ou email válido
-    const isValidEmail = email === 'admin' || email.includes('@')
+    // Validação de email
+    const isValidEmail = email.includes('@')
     if (!isValidEmail) {
-      setError('Por favor, insira um email válido ou use "admin"')
+      setError('Por favor, insira um email válido')
       return
     }
 
@@ -48,8 +48,8 @@ function Login() {
               {/* Email Input */}
               <div className="relative">
                 <input
-                  type="text"
-                  placeholder="E-mail ou usuário"
+                  type="email"
+                  placeholder="E-mail"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-gray-900 text-gray-300 placeholder-purple-300/50 px-4 py-3 pr-12 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition"

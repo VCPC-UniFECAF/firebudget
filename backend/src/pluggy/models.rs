@@ -33,8 +33,10 @@ pub struct Account {
     pub name: Option<String>,
     pub number: Option<String>,
     pub balance: Option<f64>,
-    pub currency: Option<String>,
-    pub r#type: Option<String>,
+    #[serde(rename = "currencyCode")]
+    pub currency_code: Option<String>,
+    #[serde(rename = "type")]
+    pub type_field: Option<String>,
     pub subtype: Option<String>,
     #[serde(rename = "bankData")]
     pub bank_data: Option<serde_json::Value>,
@@ -62,9 +64,11 @@ pub struct Transaction {
     pub description: Option<String>,
     pub category: Option<String>,
     pub subcategory: Option<String>,
-    pub currency: String,
+    #[serde(rename = "currencyCode")]
+    pub currency_code: String,
     pub merchant: Option<serde_json::Value>,
     pub balance: Option<f64>,
+    pub status: Option<String>,
     #[serde(rename = "createdAt")]
     pub created_at: String,
     #[serde(rename = "updatedAt")]
