@@ -16,10 +16,33 @@ firebudget/
 │   │       └── models.rs
 │   ├── Cargo.toml
 │   └── .env.example
-└── frontend/         # Frontend React
+├── frontend/         # Frontend React
+└── docker-compose.yml # Orquestração com Docker
 ```
 
-## Configuração do Backend
+## Executando com Docker Compose (Recomendado)
+
+Para iniciar toda a aplicação (Banco de dados, Backend e Frontend) em containers:
+
+1. Certifique-se de ter o Docker e Docker Compose instalados.
+2. Crie o arquivo `.env` na raiz do projeto (ou configure as variáveis no `docker-compose.yml`):
+   ```bash
+   PLUGGY_CLIENT_ID=seu_client_id
+   PLUGGY_CLIENT_SECRET=seu_client_secret
+   PLUGGY_ENV=sandbox
+   ```
+3. Execute:
+   ```bash
+   docker-compose up --build
+   ```
+
+O sistema estará disponível em:
+- Frontend: http://localhost:80
+- Backend: http://localhost:8000
+
+O banco de dados PostgreSQL será inicializado automaticamente com as tabelas necessárias.
+
+## Configuração Manual do Backend
 
 ### Pré-requisitos
 
@@ -27,6 +50,7 @@ firebudget/
   - Para atualizar o Rust: `rustup update stable`
 - Cargo (gerenciador de pacotes do Rust)
 - Credenciais da Pluggy API (obtenha em https://pluggy.ai/)
+- PostgreSQL (para banco de dados local)
 
 **Nota:** Se você encontrar erros de compilação relacionados a versões do Rust, atualize para a versão mais recente usando `rustup update stable`.
 
@@ -42,11 +66,12 @@ cd backend
 cp .env.example .env
 ```
 
-3. Edite o arquivo `.env` e adicione suas credenciais da Pluggy:
+3. Edite o arquivo `.env` e adicione suas credenciais da Pluggy e URL do banco:
 ```
 PLUGGY_CLIENT_ID=seu_client_id_aqui
 PLUGGY_CLIENT_SECRET=seu_client_secret_aqui
 PLUGGY_ENV=sandbox
+DATABASE_URL=postgres://user:pass@localhost:5432/firebudget
 ```
 
 4. Compile e execute o projeto:

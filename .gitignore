@@ -1,34 +1,37 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
+# General
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+*.log
 
+# Node / Frontend
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.local
+.env.*.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.pnp
+.pnp.js
 
-# Rust
-/target/
-**/target/
-backend/target/
+# Rust / Backend
+target/
 **/*.rs.bk
-Cargo.lock
+# Cargo.lock should typically be committed for applications to ensure reproducible builds. 
+# If this were a library, it might be ignored.
+# Cargo.lock 
 
-# Environment variables
-.env
-backend/.env
+# Docker
+.dockerignore
+
+# OS generated files
+.spotlight-V100
+.Trashes
+ehthumbs.db

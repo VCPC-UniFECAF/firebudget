@@ -1,112 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { transactionService } from '../services/api'
 
 function Transactions() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  const [transactions, setTransactions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Dados mockados das transações
-  const recentTransactions = [
-    {
-      id: 1,
-      name: "McDonald's",
-      logo: 'M',
-      logoColor: 'bg-red-500',
-      date: '01 out, 2025',
-      time: '19:45',
-      amount: 33.90,
-      status: 'Pago',
-      statusColor: 'bg-green-500'
-    },
-    {
-      id: 2,
-      name: 'UniFECAF',
-      logo: 'U',
-      logoColor: 'bg-blue-500',
-      date: '07 out, 2025',
-      time: '10:30',
-      amount: 693.00,
-      status: 'Pago',
-      statusColor: 'bg-green-500'
-    },
-    {
-      id: 3,
-      name: 'Netflix',
-      logo: 'N',
-      logoColor: 'bg-red-500',
-      date: '25 out, 2025',
-      time: '22:49',
-      amount: 59.90,
-      status: 'Em atraso',
-      statusColor: 'bg-red-500'
-    },
-    {
-      id: 4,
-      name: 'Ifood',
-      logo: 'i',
-      logoColor: 'bg-red-500',
-      date: '14 nov, 2025',
-      time: '11:20',
-      amount: 89.90,
-      status: 'Pendente',
-      statusColor: 'bg-blue-500'
-    },
-    {
-      id: 5,
-      name: 'Samuel',
-      logo: '👤',
-      logoColor: 'bg-gray-400',
-      date: 'A definir',
-      time: 'A definir',
-      amount: 25.90,
-      status: 'A receber',
-      statusColor: 'bg-cyan-400'
-    }
-  ]
+  useEffect(() => {
+    fetchTransactions()
+  }, [])
 
-  const billsAndPayments = [
-    {
-      id: 1,
-      name: 'Internet',
-      icon: '📶',
-      date: '10 out, 2025',
-      time: '10:00',
-      amount: 99.90,
-      status: 'Pago',
-      statusColor: 'bg-green-500'
-    },
-    {
-      id: 2,
-      name: 'Água',
-      icon: '💧',
-      date: '22 out, 2025',
-      time: '12:40',
-      amount: 123.40,
-      status: 'Pendente',
-      statusColor: 'bg-blue-500'
-    },
-    {
-      id: 3,
-      name: 'Luz',
-      icon: '💡',
-      date: '25 out, 2025',
-      time: '13:00',
-      amount: 120.00,
-      status: 'Pendente',
-      statusColor: 'bg-blue-500'
-    },
-    {
-      id: 4,
-      name: 'Supermercado',
-      icon: '🛒',
-      date: '01 nov, 2025',
-      time: 'A definir',
-      amount: null,
-      status: 'Pendente',
-      statusColor: 'bg-blue-500'
+  const fetchTransactions = async () => {
+    try {
+      const data = await transactionService.getTransactions()
+      setTransactions(data)
+    } catch (err) {
+      console.error('Erro ao buscar transações:', err)
+      setError('Não foi possível carregar as transações.')
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
   const handleLogout = () => {
     logout()
@@ -114,8 +32,14 @@ function Transactions() {
   }
 
   const formatCurrency = (value) => {
-    if (value === null || value === undefined) return 'A definir'
-    return `R$ ${value.toFixed(2).replace('.', ',')}`
+    if (value === null || value === undefined) return 'R$ 0,00'
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+  }
+
+  const formatDate = (dateString) => {
+      if (!dateString) return '-'
+      const date = new Date(dateString)
+      return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(date)
   }
 
   return (
@@ -218,6 +142,11 @@ function Transactions() {
 
         {/* Content Area */}
         <div className="flex-1 p-8 overflow-y-auto">
+          {loading ? (
+             <div className="text-white">Carregando...</div>
+          ) : error ? (
+             <div className="text-red-500">{error}</div>
+          ) : (
           <div className="grid grid-cols-12 gap-6">
             {/* Left Column - Transações Recentes */}
             <div className="col-span-7">
@@ -230,38 +159,30 @@ function Transactions() {
                       <tr className="border-b border-gray-200">
                         <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Nome/Plataforma</th>
                         <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Data</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Hora</th>
+                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Categoria</th>
                         <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Valor</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {recentTransactions.map((transaction) => (
+                      {transactions.length === 0 ? (
+                          <tr><td colSpan="4" className="text-center py-4 text-gray-500">Nenhuma transação encontrada</td></tr>
+                      ) : (
+                      transactions.map((transaction) => (
                         <tr key={transaction.id} className="border-b border-gray-100 hover:bg-gray-100 transition">
                           <td className="py-4 px-4">
                             <div className="flex items-center gap-3">
-                              {transaction.logo === '👤' ? (
-                                <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white text-lg">
-                                  {transaction.logo}
+                                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold">
+                                  $
                                 </div>
-                              ) : (
-                                <div className={`w-10 h-10 ${transaction.logoColor} rounded-lg flex items-center justify-center text-white font-bold`}>
-                                  {transaction.logo}
-                                </div>
-                              )}
-                              <span className="font-medium text-gray-800">{transaction.name}</span>
+                              <span className="font-medium text-gray-800">{transaction.description || 'Sem descrição'}</span>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-gray-600">{transaction.date}</td>
-                          <td className="py-4 px-4 text-gray-600">{transaction.time}</td>
+                          <td className="py-4 px-4 text-gray-600">{formatDate(transaction.date)}</td>
+                          <td className="py-4 px-4 text-gray-600">{transaction.category || '-'}</td>
                           <td className="py-4 px-4 font-semibold text-gray-800">{formatCurrency(transaction.amount)}</td>
-                          <td className="py-4 px-4">
-                            <span className={`${transaction.statusColor} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
-                              {transaction.status}
-                            </span>
-                          </td>
                         </tr>
-                      ))}
+                      ))
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -277,84 +198,24 @@ function Transactions() {
                 <div className="flex flex-wrap gap-3 mb-4">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                    <span className="text-xs text-gray-600">Pago</span>
+                    <span className="text-xs text-gray-600">Receitas</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-                    <span className="text-xs text-gray-600">Em atraso</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
-                    <span className="text-xs text-gray-600">Pendente</span>
+                    <span className="text-xs text-gray-600">Despesas</span>
                   </div>
                 </div>
 
-                {/* Chart */}
+                {/* Chart Placeholder - Real logic needs aggregation */}
                 <div className="flex-1 flex items-end justify-center gap-6">
-                  {/* Outubro */}
-                  <div className="w-28">
-                    <p className="text-xs font-semibold text-gray-700 mb-2 text-center">Out</p>
-                    <div className="flex items-end gap-2 h-12">
-                      <div className="flex-1 bg-green-500 rounded-t-lg" style={{ height: '60%' }}></div>
-                      <div className="flex-1 bg-red-500 rounded-t-lg" style={{ height: '25%' }}></div>
-                      <div className="flex-1 bg-blue-500 rounded-t-lg" style={{ height: '35%' }}></div>
-                    </div>
-                  </div>
-
-                  {/* Novembro */}
-                  <div className="w-28">
-                    <p className="text-xs font-semibold text-gray-700 mb-2 text-center">Nov</p>
-                    <div className="flex items-end gap-2 h-12">
-                      <div className="flex-1 bg-blue-500 rounded-t-lg" style={{ height: '15%' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom - Contas e Pagamentos */}
-            <div className="col-span-12 mt-6">
-              <div className="bg-gray-50 rounded-2xl p-6 shadow-lg animate-fade-in animate-delay-400 transition-smooth hover:shadow-xl">
-                <h2 className="text-xl font-bold text-gray-800 mb-6">Contas e Pagamentos</h2>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Nome/Plataforma</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Data</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Hora</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Valor</th>
-                        <th className="text-left py-3 px-4 text-teal-500 font-semibold text-sm">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {billsAndPayments.map((bill) => (
-                        <tr key={bill.id} className="border-b border-gray-100 hover:bg-gray-100 transition">
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-xl">
-                                {bill.icon}
-                              </div>
-                              <span className="font-medium text-gray-800">{bill.name}</span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4 text-gray-600">{bill.date}</td>
-                          <td className="py-4 px-4 text-gray-600">{bill.time}</td>
-                          <td className="py-4 px-4 font-semibold text-gray-800">{formatCurrency(bill.amount)}</td>
-                          <td className="py-4 px-4">
-                            <span className={`${bill.statusColor} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
-                              {bill.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                   <div className="text-gray-400 text-sm text-center w-full flex items-center justify-center">
+                       Gráfico em desenvolvimento
+                   </div>
                 </div>
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>
