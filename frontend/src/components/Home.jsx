@@ -12,36 +12,95 @@ function Home() {
   const [chartPeriod, setChartPeriod] = useState('2025')
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [balance, setBalance] = useState(10900.0)
-  const [totalExpenses, setTotalExpenses] = useState(5870.9)
-  const [totalSaved, setTotalSaved] = useState(3500.0)
+  const [balance, setBalance] = useState(0)
+  const [totalExpenses, setTotalExpenses] = useState(0)
+  const [totalSaved, setTotalSaved] = useState(0)
+  const [monthlyExpenses, setMonthlyExpenses] = useState([])
   const [isPluggyModalOpen, setIsPluggyModalOpen] = useState(false)
 
   useEffect(() => {
     loadData()
-  }, [expensePeriod])
+  }, [expensePeriod, chartPeriod])
+
+  const formatCurrency = (value) => {
+    if (typeof value === 'string') {
+      value = parseFloat(value)
+    }
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value)
+  }
+
+  const formatCurrencyValue = (value) => {
+    if (typeof value === 'string') {
+      value = parseFloat(value)
+    }
+    return value.toFixed(2).replace('.', ',')
+  }
 
   const loadData = async () => {
     try {
       setLoading(true)
-      // Simulando chamadas à API - substituir quando o backend estiver pronto
-      // const transactionsData = await transactionService.getTransactions(expensePeriod)
-      // const accountsData = await accountService.getAccounts()
       
-      // Dados mockados por enquanto
-      const mockTransactions = [
-        { name: 'McDonald\'s', date: '01 out, 2025', amount: 33.90, logo: '🍔' },
-        { name: 'UniFECAF', date: '07 out, 2025', amount: 693.00, logo: '🎓' },
-        { name: 'Netflix', date: '25 out, 2025', amount: 59.90, logo: '📺' },
-        { name: 'iFood', date: '14 nov, 2025', amount: 89.90, logo: '🍴' },
-        { name: 'Nike', date: '15 nov, 2025', amount: 749.00, logo: '👟' },
-      ]
-      setTransactions(mockTransactions)
+      // Carregar dados reais
+      const [balanceData, expensesData, monthlyData, transactionsData] = await Promise.all([
+        accountService.getTotalBalance(),
+        accountService.getTotalExpenses(),
+        accountService.getMonthlyExpenses(parseInt(chartPeriod)),
+        transactionService.getTransactions()
+      ])
+
+      // Atualizar estados
+      const balanceValue = parseFloat(balanceData.total_balance) || 0
+      const expensesValue = parseFloat(expensesData.total_expenses) || 0
+      const savedValue = balanceValue - expensesValue
+
+      setBalance(balanceValue)
+      setTotalExpenses(expensesValue)
+      setTotalSaved(savedValue)
+      setMonthlyExpenses(monthlyData || [])
+
+      // Processar transações
+      const processedTransactions = (transactionsData || [])
+        .filter(t => parseFloat(t.amount) < 0) // Apenas despesas
+        .slice(0, 10) // Limitar a 10 transações
+        .map(t => {
+          const date = new Date(t.date)
+          const monthNames = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+          const formattedDate = `${date.getDate()} ${monthNames[date.getMonth()]}, ${date.getFullYear()}`
+          
+          return {
+            name: t.description || 'Transação',
+            date: formattedDate,
+            amount: Math.abs(parseFloat(t.amount)),
+            logo: getTransactionIcon(t.category)
+          }
+        })
+      
+      setTransactions(processedTransactions)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const getTransactionIcon = (category) => {
+    const icons = {
+      'food': '🍔',
+      'education': '🎓',
+      'entertainment': '📺',
+      'shopping': '👟',
+      'default': '💰'
+    }
+    if (!category) return icons.default
+    const lowerCategory = category.toLowerCase()
+    if (lowerCategory.includes('food') || lowerCategory.includes('restaurant')) return icons.food
+    if (lowerCategory.includes('education') || lowerCategory.includes('school')) return icons.education
+    if (lowerCategory.includes('entertainment') || lowerCategory.includes('streaming')) return icons.entertainment
+    if (lowerCategory.includes('shopping') || lowerCategory.includes('clothing')) return icons.shopping
+    return icons.default
   }
 
   const handleLogout = () => {
@@ -162,7 +221,7 @@ function Home() {
                 </div>
               </div>
               <p className="text-gray-600 text-sm mb-1">Saldo Total</p>
-              <p className="text-2xl font-bold text-gray-900">R$ 10.900,00</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(balance)}</p>
             </div>
 
             {/* Gasto Total */}
@@ -180,7 +239,7 @@ function Home() {
                 </div>
               </div>
               <p className="text-gray-600 text-sm mb-1">Gasto Total</p>
-              <p className="text-2xl font-bold text-gray-900">R$ 5.870,90</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalExpenses)}</p>
             </div>
 
             {/* Total Economizado */}
@@ -198,7 +257,7 @@ function Home() {
                 </div>
               </div>
               <p className="text-gray-600 text-sm mb-1">Total Economizado</p>
-              <p className="text-2xl font-bold text-gray-900">R$ 3.500,00</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalSaved)}</p>
             </div>
           </div>
 
@@ -220,10 +279,9 @@ function Home() {
                     <option>90 Dias</option>
                   </select>
                 </div>
-                <p className="text-xl font-bold text-gray-900 mb-1">R$ 10.900,00</p>
+                <p className="text-xl font-bold text-gray-900 mb-1">{formatCurrency(balance)}</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-600 font-semibold text-sm">+28%</span>
-                  <span className="text-gray-500 text-xs">vs mês anterior</span>
+                  <span className="text-gray-500 text-xs">Saldo total das contas</span>
                 </div>
               </div>
 
@@ -241,19 +299,38 @@ function Home() {
                   </select>
                 </div>
                 <div className="flex items-end justify-between gap-2 h-32">
-                  {[
-                    { month: 'Jun', value: 7.3, height: '70%' },
-                    { month: 'Jul', value: 3.5, height: '35%' },
-                    { month: 'Ago', value: 4.8, height: '48%' },
-                    { month: 'Set', value: 9.6, height: '96%' },
-                    { month: 'Out', value: 5.5, height: '55%' },
-                  ].map((bar, index) => (
-                    <div key={index} className="flex-1 flex flex-col items-center">
-                      <div className="w-full bg-cyan-500 rounded-t-lg mb-2" style={{ height: bar.height }}></div>
-                      <p className="text-xs text-gray-500">{bar.month}</p>
-                      <p className="text-xs font-semibold text-gray-700">{bar.value}k</p>
-                    </div>
-                  ))}
+                  {(() => {
+                    const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+                    
+                    // Criar um mapa de todos os meses do ano
+                    const yearData = Array.from({ length: 12 }, (_, i) => {
+                      const monthData = monthlyExpenses.find(me => me.month === i + 1)
+                      return {
+                        month: i + 1,
+                        monthName: monthNames[i],
+                        value: monthData ? parseFloat(monthData.total) : 0
+                      }
+                    })
+                    
+                    // Encontrar o valor máximo para escalar as barras
+                    const maxValue = Math.max(...yearData.map(d => d.value), 1)
+                    
+                    return yearData.map((bar, index) => {
+                      const heightPercent = maxValue > 0 ? (bar.value / maxValue) * 100 : 0
+                      const displayValue = bar.value >= 1000 ? (bar.value / 1000).toFixed(1) + 'k' : bar.value.toFixed(0)
+                      
+                      return (
+                        <div key={index} className="flex-1 flex flex-col items-center">
+                          <div 
+                            className="w-full bg-cyan-500 rounded-t-lg mb-2" 
+                            style={{ height: `${heightPercent}%` }}
+                          ></div>
+                          <p className="text-xs text-gray-500">{bar.monthName}</p>
+                          <p className="text-xs font-semibold text-gray-700">{displayValue}</p>
+                        </div>
+                      )
+                    })
+                  })()}
                 </div>
               </div>
             </div>

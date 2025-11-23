@@ -102,6 +102,23 @@ export const accountService = {
     const response = await api.get(`/accounts/${accountId}/balance`)
     return response.data
   },
+
+  async getTotalBalance() {
+    const response = await api.get('/accounts/balance/total')
+    return response.data
+  },
+
+  async getTotalExpenses() {
+    const response = await api.get('/accounts/expenses/total')
+    return response.data
+  },
+
+  async getMonthlyExpenses(year) {
+    const response = await api.get('/accounts/expenses/monthly', {
+      params: { year }
+    })
+    return response.data
+  },
 }
 
 // Serviços de links bancários
