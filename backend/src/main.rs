@@ -6,7 +6,7 @@ mod routes;
 use config::AppConfig;
 use pluggy::client::PluggyClient;
 use pluggy::models::ConnectTokenResponse;
-use routes::{auth, transactions, items};
+use routes::{auth, transactions, items, accounts};
 use dotenvy::dotenv;
 use rocket::{get, post, routes, State, serde::json::Json, http::Status};
 use rocket_cors::{CorsOptions, AllowedOrigins};
@@ -180,7 +180,10 @@ async fn main() -> Result<(), rocket::Error> {
             transactions::create_transaction,
             transactions::delete_transaction,
             transactions::update_transaction,
-            items::create_item
+            items::create_item,
+            accounts::get_total_balance,
+            accounts::get_total_expenses,
+            accounts::get_monthly_expenses
         ])
         .launch()
         .await?;
