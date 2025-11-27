@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT COALESCE(SUM(a.balance), 0) as total_balance\n        FROM accounts a\n        INNER JOIN items i ON a.item_id = i.id\n        WHERE i.user_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total_balance",
+        "type_info": "Numeric"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "78466d0e24712c0a659b785562722d17a08eaac887edf58769c407d095219d2b"
+}

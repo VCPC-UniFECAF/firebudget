@@ -46,9 +46,9 @@ function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex relative">
+    <div className="min-h-screen bg-[#140A23] flex relative">
       {/* Sidebar */}
-      <div className="w-20 bg-purple-900 flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left">
+      <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left z-10">
         {/* Logo placeholder */}
         <div className="w-12 h-12 bg-gray-300 rounded-lg mb-8"></div>
         
@@ -56,7 +56,7 @@ function Settings() {
         <div className="flex flex-col gap-6 flex-1">
           <button 
             onClick={() => navigate('/home')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -65,7 +65,7 @@ function Settings() {
           
           <button 
             onClick={() => navigate('/calendar')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -74,7 +74,7 @@ function Settings() {
           
           <button 
             onClick={() => navigate('/transactions')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -89,7 +89,7 @@ function Settings() {
           
           <button 
             onClick={() => navigate('/rewards')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
@@ -98,7 +98,7 @@ function Settings() {
         </div>
         
         {/* Settings Icon */}
-        <button className="text-teal-400 transition-smooth mb-0">
+        <button className="text-[#00FFB2] transition-smooth mb-0">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -107,14 +107,14 @@ function Settings() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-20">
         {/* Header */}
-        <div className="bg-gray-900 px-8 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-teal-400">
+        <div className="bg-[#140A23] px-8 py-4 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-[#00FFB2]">
             Configurações
           </h1>
           <div className="flex gap-4 items-center">
-            <button className="hover:text-gray-300 transition">
+            <button className="text-[#00FFB2] hover:opacity-80 transition">
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -122,7 +122,7 @@ function Settings() {
               </div>
             </button>
             <div className="relative group">
-              <button className="hover:text-gray-300 transition">
+              <button className="text-[#00FFB2] hover:opacity-80 transition">
                 <div className="w-10 h-10 bg-white rounded-full overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" 
@@ -149,7 +149,7 @@ function Settings() {
             {/* Perfil */}
             <div className="bg-gray-50 rounded-2xl p-6 shadow-lg border-2 border-blue-200 animate-fade-in animate-delay-200 transition-smooth hover:shadow-xl">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#7802D6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 Perfil
@@ -160,8 +160,8 @@ function Settings() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
                   <input
                     type="text"
-                    defaultValue={user?.fullName || 'Administrador'}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    defaultValue={user?.full_name || 'Administrador'}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   />
                 </div>
                 
@@ -170,7 +170,7 @@ function Settings() {
                   <input
                     type="email"
                     defaultValue={user?.email || 'admin'}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   />
                 </div>
                 
@@ -179,11 +179,11 @@ function Settings() {
                   <input
                     type="tel"
                     placeholder="(00) 00000-0000"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   />
                 </div>
                 
-                <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+                <button className="bg-[#7802D6] hover:opacity-80 text-white font-semibold py-2 px-6 rounded-lg transition">
                   Salvar Alterações
                 </button>
               </div>
@@ -207,21 +207,21 @@ function Settings() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">Senha Atual</label>
                       <input
                         type="password"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Nova Senha</label>
                       <input
                         type="password"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Confirmar Nova Senha</label>
                       <input
                         type="password"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                       />
                     </div>
                     <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition">
@@ -244,7 +244,7 @@ function Settings() {
                         onChange={(e) => handleSecurityChange('twoFactor', e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#7802D6]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#7802D6]"></div>
                     </label>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ function Settings() {
                         onChange={(e) => handleSecurityChange('biometric', e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#7802D6]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#7802D6]"></div>
                     </label>
                   </div>
                 </div>
@@ -275,7 +275,7 @@ function Settings() {
                   <select
                     value={security.sessionTimeout}
                     onChange={(e) => handleSecurityChange('sessionTimeout', parseInt(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   >
                     <option value={15}>15 minutos</option>
                     <option value={30}>30 minutos</option>
@@ -417,7 +417,7 @@ function Settings() {
             {/* Preferências */}
             <div className="bg-gray-50 rounded-2xl p-6 shadow-lg border-2 border-blue-200">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#00FFB2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -430,7 +430,7 @@ function Settings() {
                   <select
                     value={preferences.language}
                     onChange={(e) => setPreferences(prev => ({ ...prev, language: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   >
                     <option value="pt-BR">Português (Brasil)</option>
                     <option value="en-US">English (US)</option>
@@ -443,7 +443,7 @@ function Settings() {
                   <select
                     value={preferences.currency}
                     onChange={(e) => setPreferences(prev => ({ ...prev, currency: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   >
                     <option value="BRL">Real Brasileiro (R$)</option>
                     <option value="USD">Dólar Americano ($)</option>
@@ -456,7 +456,7 @@ function Settings() {
                   <select
                     value={preferences.theme}
                     onChange={(e) => setPreferences(prev => ({ ...prev, theme: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7802D6] focus:border-transparent"
                   >
                     <option value="dark">Escuro</option>
                     <option value="light">Claro</option>
@@ -464,7 +464,7 @@ function Settings() {
                   </select>
                 </div>
 
-                <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+                <button className="bg-[#7802D6] hover:opacity-80 text-white font-semibold py-2 px-6 rounded-lg transition">
                   Salvar Preferências
                 </button>
               </div>

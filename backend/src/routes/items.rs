@@ -74,7 +74,7 @@ pub async fn create_item(
     }))
 }
 
-async fn sync_item_data(
+pub async fn sync_item_data(
     config: Arc<AppConfig>,
     pool: PgPool,
     pluggy_item_id: &str,

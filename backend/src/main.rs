@@ -2,11 +2,12 @@ mod config;
 mod models;
 mod pluggy;
 mod routes;
+mod scheduler;
 
 use config::AppConfig;
 use pluggy::client::PluggyClient;
 use pluggy::models::ConnectTokenResponse;
-use routes::{auth, transactions, items, accounts};
+use routes::{auth, transactions, items, accounts, webhooks};
 use dotenvy::dotenv;
 use rocket::{get, post, routes, State, serde::json::Json, http::Status};
 use rocket_cors::{CorsOptions, AllowedOrigins};
@@ -18,7 +19,7 @@ fn health() -> &'static str {
     "OK"
 }
 
-#[post("/api/pluggy/connect-token")]
+#[post("/pluggy/connect-token")]
 async fn create_connect_token(config: &State<Arc<AppConfig>>) -> Result<Json<ConnectTokenResponse>, (Status, String)> {
     let pluggy_config = AppConfig {
         client_id: config.client_id.clone(),
@@ -165,13 +166,16 @@ async fn main() -> Result<(), rocket::Error> {
             std::process::exit(1);
         });
 
+    // Iniciar scheduler
+    scheduler::start_scheduler(pool.clone(), app_config.clone());
+
     println!("\nIniciando servidor Rocket na porta 8000...");
     
     let _rocket = rocket::build()
         .manage(app_config)
         .manage(pool)
         .attach(cors)
-        .mount("/", routes![
+        .mount("/api", routes![
             health, 
             create_connect_token, 
             auth::register, 
@@ -183,7 +187,8 @@ async fn main() -> Result<(), rocket::Error> {
             items::create_item,
             accounts::get_total_balance,
             accounts::get_total_expenses,
-            accounts::get_monthly_expenses
+            accounts::get_monthly_expenses,
+            webhooks::handle_pluggy_webhook
         ])
         .launch()
         .await?;

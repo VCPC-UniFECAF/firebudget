@@ -26,10 +26,19 @@ pub struct Item {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct PageResponse<T> {
+    pub results: Vec<T>,
+    pub total: u32,
+    #[serde(rename = "totalPages")]
+    pub total_pages: u32,
+    pub page: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Account {
     pub id: String,
     #[serde(rename = "itemId")]
-    pub item_id: String,
+    pub item_id: Option<String>,
     pub name: Option<String>,
     pub number: Option<String>,
     pub balance: Option<f64>,
@@ -58,7 +67,7 @@ pub struct Transaction {
     #[serde(rename = "accountId")]
     pub account_id: String,
     #[serde(rename = "itemId")]
-    pub item_id: String,
+    pub item_id: Option<String>,
     pub amount: f64,
     pub date: String,
     pub description: Option<String>,
@@ -81,7 +90,7 @@ pub struct Balance {
     #[serde(rename = "accountId")]
     pub account_id: String,
     #[serde(rename = "itemId")]
-    pub item_id: String,
+    pub item_id: Option<String>,
     pub balance: f64,
     pub currency: String,
     #[serde(rename = "createdAt")]
@@ -102,4 +111,3 @@ pub struct ConnectTokenResponse {
     #[serde(rename = "accessToken")]
     pub connect_token: String,
 }
-

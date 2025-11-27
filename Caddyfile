@@ -1,0 +1,12 @@
+18.119.56.212.nip.io {
+    # Frontend (SPA)
+    handle /* {
+        reverse_proxy frontend:80
+    }
+
+    # Backend (API)
+    handle /api/* {
+        reverse_proxy backend:8000
+    }
+}
+

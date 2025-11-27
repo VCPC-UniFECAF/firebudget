@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     const DEV_MODE = import.meta.env.VITE_DEV_MODE === 'true' || false
     
     if (DEV_MODE) {
-      setUser({ fullName: 'Usuário Dev', email: 'dev@test.com' })
+      setUser({ full_name: 'Usuário Dev', email: 'dev@test.com' })
       setIsAuthenticated(true)
       setLoading(false)
       return

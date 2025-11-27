@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: firebudget-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - firebudget-network
+    depends_on:
+      - frontend
+      - backend
+
   postgres:
     image: postgres:15-alpine
     container_name: firebudget-db
@@ -38,8 +55,7 @@ services:
       ADMIN_NAME: ${ADMIN_NAME}
       ROCKET_ADDRESS: 0.0.0.0
       ROCKET_PORT: 8000
-    ports:
-      - "8000:8000"
+    # Ports removed because Caddy handles external access
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,10 +68,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: firebudget-frontend
-    ports:
-      - "80:80"
+    # Ports removed because Caddy handles external access
     environment:
-      VITE_API_URL: http://localhost:8000
+      # Now frontend uses relative path /api since it's on the same domain
+      VITE_API_URL: /api
     depends_on:
       - backend
     networks:
@@ -68,4 +84,5 @@ networks:
 
 volumes:
   postgres_data:
-
+  caddy_data:
+  caddy_config:

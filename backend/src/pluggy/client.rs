@@ -128,6 +128,26 @@ impl PluggyClient {
         Ok(items)
     }
 
+    pub async fn get_item_by_id(&mut self, item_id: &str) -> Result<Item> {
+        let api_key = self.get_api_key_header().await?;
+        let url = format!("{}/items/{}", self.config.base_url, item_id);
+
+        let response = self
+            .client
+            .get(&url)
+            .header("X-API-KEY", &api_key)
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            let error_text = response.text().await?;
+            return Err(anyhow::anyhow!("Erro ao buscar item: {}", error_text));
+        }
+
+        let item: Item = response.json().await?;
+        Ok(item)
+    }
+
     pub async fn get_accounts(&mut self, item_id: Option<&str>) -> Result<Vec<Account>> {
         let api_key = self.get_api_key_header().await?;
         let mut url = format!("{}/accounts", self.config.base_url);
@@ -148,8 +168,8 @@ impl PluggyClient {
             return Err(anyhow::anyhow!("Erro ao buscar contas: {}", error_text));
         }
 
-        let accounts: Vec<Account> = response.json().await?;
-        Ok(accounts)
+        let page: PageResponse<Account> = response.json().await?;
+        Ok(page.results)
     }
 
     pub async fn get_transactions(
@@ -184,8 +204,28 @@ impl PluggyClient {
             return Err(anyhow::anyhow!("Erro ao buscar transações: {}", error_text));
         }
 
-        let transactions: Vec<Transaction> = response.json().await?;
-        Ok(transactions)
+        let page: PageResponse<Transaction> = response.json().await?;
+        Ok(page.results)
+    }
+
+    pub async fn get_transaction_by_id(&mut self, transaction_id: &str) -> Result<Transaction> {
+        let api_key = self.get_api_key_header().await?;
+        let url = format!("{}/transactions/{}", self.config.base_url, transaction_id);
+
+        let response = self
+            .client
+            .get(&url)
+            .header("X-API-KEY", &api_key)
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            let error_text = response.text().await?;
+            return Err(anyhow::anyhow!("Erro ao buscar transação: {}", error_text));
+        }
+
+        let transaction: Transaction = response.json().await?;
+        Ok(transaction)
     }
 
     pub async fn get_balances(

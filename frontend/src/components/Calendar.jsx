@@ -61,9 +61,9 @@ function Calendar() {
   const years = Array.from({ length: 11 }, (_, i) => 2020 + i)
 
   return (
-    <div className="min-h-screen bg-gray-900 flex relative">
+    <div className="min-h-screen bg-[#140A23] flex relative">
       {/* Sidebar */}
-      <div className="w-20 bg-purple-900 flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left">
+      <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left z-10">
         {/* Logo placeholder */}
         <div className="w-12 h-12 bg-gray-300 rounded-lg mb-8"></div>
         
@@ -71,14 +71,14 @@ function Calendar() {
         <div className="flex flex-col gap-6 flex-1">
           <button 
             onClick={() => navigate('/home')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </button>
           
-          <button className="text-teal-400 transition-smooth">
+          <button className="text-[#00FFB2] transition-smooth">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -86,7 +86,7 @@ function Calendar() {
           
           <button 
             onClick={() => navigate('/transactions')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -101,7 +101,7 @@ function Calendar() {
           
           <button 
             onClick={() => navigate('/rewards')}
-            className="text-white hover:text-purple-300 transition"
+            className="text-white hover:opacity-80 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
@@ -122,14 +122,14 @@ function Calendar() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-20">
         {/* Header */}
-        <div className="bg-gray-900 px-8 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-teal-400">
+        <div className="bg-[#140A23] px-8 py-4 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-[#00FFB2]">
             Calendário Financeiro
           </h1>
           <div className="flex gap-4 items-center">
-            <button className="hover:text-gray-300 transition">
+            <button className="text-[#00FFB2] hover:opacity-80 transition">
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -137,7 +137,7 @@ function Calendar() {
               </div>
             </button>
             <div className="relative group">
-              <button className="hover:text-gray-300 transition">
+              <button className="text-[#00FFB2] hover:opacity-80 transition">
                 <div className="w-10 h-10 bg-white rounded-full overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" 
@@ -212,7 +212,7 @@ function Calendar() {
                 <div
                   key={index}
                   className={`text-center font-semibold py-2 ${
-                    index === 0 ? 'text-teal-500' : 'text-blue-600'
+                    index === 0 ? 'text-[#00FFB2]' : 'text-blue-600'
                   }`}
                 >
                   {day}
@@ -232,7 +232,7 @@ function Calendar() {
                       ${day === null 
                         ? 'bg-gray-100' 
                         : isSundayDay
-                        ? 'bg-teal-500 text-white'
+                        ? 'bg-[#00FFB2] text-white'
                         : 'bg-gray-200 text-gray-800 hover:bg-gray-300 transition cursor-pointer'
                       }
                     `}

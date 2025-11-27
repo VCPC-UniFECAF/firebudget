@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL = '/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -124,7 +125,7 @@ export const accountService = {
 // Serviços de links bancários
 export const linkService = {
   async createLink(institution, username, password) {
-    const response = await api.post('/api/links', {
+    const response = await api.post('/links', {
       institution,
       username,
       password,
@@ -133,12 +134,12 @@ export const linkService = {
   },
 
   async getLinks() {
-    const response = await api.get('/api/links')
+    const response = await api.get('/links')
     return response.data
   },
 
   async getLinkData(linkId) {
-    const response = await api.get(`/api/links/${linkId}/data`)
+    const response = await api.get(`/links/${linkId}/data`)
     return response.data
   },
 }
@@ -146,7 +147,7 @@ export const linkService = {
 // Serviços da Pluggy
 export const pluggyService = {
   async getConnectToken() {
-    const response = await api.post('/api/pluggy/connect-token')
+    const response = await api.post('/pluggy/connect-token')
     return response.data
   },
 

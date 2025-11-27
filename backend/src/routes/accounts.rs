@@ -1,5 +1,5 @@
 use crate::routes::transactions::AuthenticatedUser;
-use chrono::Utc;
+use chrono::{Datelike, Utc};
 use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::{get, State};
@@ -83,7 +83,7 @@ pub struct MonthlyExpense {
     pub total: Decimal,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, rocket::FromForm)]
 pub struct MonthlyExpensesQuery {
     pub year: Option<i32>,
 }
@@ -105,7 +105,7 @@ pub async fn get_monthly_expenses(
         FROM transactions
         WHERE user_id = $1 
           AND amount < 0
-          AND EXTRACT(YEAR FROM date) = $2
+          AND EXTRACT(YEAR FROM date)::INTEGER = $2
         GROUP BY EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date)
         ORDER BY month
         "#,
