@@ -24,6 +24,7 @@ pub async fn get_total_balance(
         FROM accounts a
         INNER JOIN items i ON a.item_id = i.id
         WHERE i.user_id = $1
+        AND a.type ="BANK"
         "#,
         user.id
     )
