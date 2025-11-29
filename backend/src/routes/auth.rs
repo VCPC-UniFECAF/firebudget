@@ -30,7 +30,8 @@ struct Claims {
 pub async fn register(
     new_user: Json<NewUser>,
     pool: &State<PgPool>,
-) -> Result<Json<User>, (Status, String)> {
+    config: &State<Arc<AppConfig>>,
+) -> Result<Json<AuthResponse>, (Status, String)> {
     // Verifica se email já existe
     let user_exists = sqlx::query!(
         "SELECT id FROM users WHERE email = $1",
@@ -64,7 +65,26 @@ pub async fn register(
     .await
     .map_err(|e| (Status::InternalServerError, format!("Erro ao criar usuário: {}", e)))?;
 
-    Ok(Json(user))
+    // Gera JWT
+    let expiration = Utc::now()
+        .checked_add_signed(Duration::hours(24))
+        .expect("valid timestamp")
+        .timestamp();
+
+    let claims = Claims {
+        sub: user.id.to_string(),
+        exp: expiration as usize,
+        iat: Utc::now().timestamp() as usize,
+    };
+
+    let token = encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(config.jwt_secret.as_bytes()),
+    )
+    .map_err(|e| (Status::InternalServerError, format!("Erro ao gerar token: {}", e)))?;
+
+    Ok(Json(AuthResponse { token, user }))
 }
 
 #[post("/auth/login", format = "json", data = "<login_user>")]

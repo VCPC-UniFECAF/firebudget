@@ -100,6 +100,29 @@ pub async fn sync_item_data(
 
     let mut client = PluggyClient::new(app_config);
 
+    // 0. Buscar detalhes do Item (para pegar o connector e salvar no banco)
+    match client.get_item_by_id(pluggy_item_id).await {
+        Ok(item_details) => {
+            if let Some(connector) = item_details.connector {
+                let update_result = sqlx::query!(
+                    "UPDATE items SET connector = $1 WHERE id = $2",
+                    connector,
+                    db_item_id
+                )
+                .execute(&pool)
+                .await;
+                
+                if let Err(e) = update_result {
+                    eprintln!("Erro ao atualizar connector do item: {}", e);
+                }
+            }
+        },
+        Err(e) => {
+             eprintln!("Erro ao buscar detalhes do item: {}", e);
+             // Não abortar, continuar para buscar contas
+        }
+    }
+
     // 1. Buscar Contas
     let accounts = client.get_accounts(Some(pluggy_item_id)).await?;
     

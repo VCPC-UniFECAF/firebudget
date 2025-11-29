@@ -49,8 +49,14 @@ function Settings() {
     <div className="min-h-screen bg-[#140A23] flex relative">
       {/* Sidebar */}
       <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left z-10">
-        {/* Logo placeholder */}
-        <div className="w-12 h-12 bg-gray-300 rounded-lg mb-8"></div>
+        {/* Logo */}
+        <div className="w-12 h-12 rounded-lg overflow-hidden mb-8 bg-[#7802D6]">
+          <img
+            src="/images/logo/logofirebudget.png"
+            alt="FireBudget"
+            className="w-full h-full object-contain"
+          />
+        </div>
         
         {/* Menu Icons */}
         <div className="flex flex-col gap-6 flex-1">
@@ -84,6 +90,15 @@ function Settings() {
           <button className="text-white hover:text-purple-300 transition">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </button>
+          
+          <button 
+            onClick={() => navigate('/about')}
+            className="text-white hover:text-[#00FFB2] transition"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5V4H2v16h5m10 0V10a3 3 0 00-3-3H10a3 3 0 00-3 3v10m10 0H7" />
             </svg>
           </button>
           

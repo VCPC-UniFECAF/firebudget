@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            a.id, \n            a.name, \n            a.balance, \n            a.currency, \n            a.type as \"type_\", \n            a.number,\n            a.item_id,\n            i.connector as \"connector?\"\n        FROM accounts a\n        INNER JOIN items i ON a.item_id = i.id\n        WHERE i.user_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "balance",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 3,
+        "name": "currency",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "type_",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 7,
+        "name": "connector?",
+        "type_info": "Jsonb"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "49f87460a24f86f9e147f96a9aa3634051a035c3952b34cbe2185de19fcb3b44"
+}

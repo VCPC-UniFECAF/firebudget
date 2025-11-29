@@ -188,6 +188,7 @@ async fn main() -> Result<(), rocket::Error> {
             accounts::get_total_balance,
             accounts::get_total_expenses,
             accounts::get_monthly_expenses,
+            accounts::get_accounts,
             webhooks::handle_pluggy_webhook
         ])
         .launch()

@@ -73,8 +73,14 @@ function Rewards() {
     <div className="min-h-screen bg-[#140A23] flex relative">
       {/* Sidebar */}
       <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left z-10">
-        {/* Logo placeholder */}
-        <div className="w-12 h-12 bg-gray-300 rounded-lg mb-8"></div>
+        {/* Logo */}
+        <div className="w-12 h-12 rounded-lg overflow-hidden mb-8 bg-[#7802D6]">
+          <img
+            src="/images/logo/logofirebudget.png"
+            alt="FireBudget"
+            className="w-full h-full object-contain"
+          />
+        </div>
         
         {/* Menu Icons */}
         <div className="flex flex-col gap-6 flex-1">
@@ -111,6 +117,15 @@ function Rewards() {
             </svg>
           </button>
           
+          <button 
+            onClick={() => navigate('/about')}
+            className="text-white hover:text-[#00FFB2] transition"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5V4H2v16h5m10 0V10a3 3 0 00-3-3H10a3 3 0 00-3 3v10m10 0H7" />
+            </svg>
+          </button>
+          
           <button className="text-[#00FFB2] transition-smooth">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
@@ -139,7 +154,7 @@ function Rewards() {
           </h1>
           <div className="flex gap-4 items-center">
             <button className="text-[#00FFB2] hover:opacity-80 transition">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#7802D6] rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
@@ -147,7 +162,7 @@ function Rewards() {
             </button>
             <div className="relative group">
               <button className="text-[#00FFB2] hover:opacity-80 transition">
-                <div className="w-10 h-10 bg-white rounded-full overflow-hidden">
+                <div className="w-10 h-10 bg-[#7802D6] rounded-full overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" 
                     alt="Profile" 
@@ -155,7 +170,7 @@ function Rewards() {
                   />
                 </div>
               </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-[#7802D6] rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                 <button
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
@@ -189,7 +204,7 @@ function Rewards() {
                 
                 <div className="space-y-4">
                   {availableRewards.map((reward) => (
-                    <div key={reward.id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition">
+                    <div key={reward.id} className="flex items-center justify-between p-4 bg-[#7802D6] rounded-lg border border-gray-200 hover:shadow-md transition">
                       <div className="flex items-center gap-4">
                         <div className="text-3xl">{reward.icon}</div>
                         <span className="font-medium text-gray-800">{reward.title}</span>
@@ -210,7 +225,7 @@ function Rewards() {
                   {missions.map((mission) => {
                     const progress = calculateProgress(mission.current, mission.target)
                     return (
-                      <div key={mission.id} className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition">
+                      <div key={mission.id} className="p-4 bg-[#7802D6] rounded-lg border border-gray-200 hover:shadow-md transition">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="text-2xl">{mission.icon}</div>
                           <span className="font-medium text-gray-800 flex-1">{mission.title}</span>

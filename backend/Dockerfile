@@ -6,24 +6,14 @@ WORKDIR /usr/src/app
 # Instalar dependências de build
 RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 
-# Criar projeto dummy para cachear dependências
-RUN mkdir src && \
-    echo "fn main() {println!(\"if you see this, the build broke\")}" > src/main.rs
-
-COPY Cargo.toml Cargo.lock ./
-
-# Build apenas das dependências
-RUN cargo build --release
-
-# Remover o dummy e copiar o código fonte real
-RUN rm -f target/release/deps/firebudget_backend*
+# Copiar tudo de uma vez para evitar camadas extras e uso de disco intermediário
 COPY . .
 
-# Forçar modo offline do SQLx e garantir que o diretório .sqlx seja copiado
+# Forçar modo offline do SQLx (requer que o cache .sqlx esteja presente e completo)
 ENV SQLX_OFFLINE=true
 
-# Build da aplicação real
-RUN cargo build --release
+# Build da aplicação real em um único passo e limpar target logo em seguida para economizar espaço na imagem final (embora em multi-stage isso importe menos para a imagem final, importa para o cache de build)
+RUN cargo build --release && strip target/release/firebudget-backend
 
 # Runtime stage
 FROM debian:bookworm-slim

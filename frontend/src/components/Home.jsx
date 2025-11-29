@@ -16,6 +16,7 @@ function Home() {
   const [totalExpenses, setTotalExpenses] = useState(0)
   const [totalSaved, setTotalSaved] = useState(0)
   const [monthlyExpenses, setMonthlyExpenses] = useState([])
+  const [accounts, setAccounts] = useState([])
   const [isPluggyModalOpen, setIsPluggyModalOpen] = useState(false)
 
   useEffect(() => {
@@ -44,11 +45,12 @@ function Home() {
       setLoading(true)
       
       // Carregar dados reais
-      const [balanceData, expensesData, monthlyData, transactionsData] = await Promise.all([
+      const [balanceData, expensesData, monthlyData, transactionsData, accountsData] = await Promise.all([
         accountService.getTotalBalance(),
         accountService.getTotalExpenses(),
         accountService.getMonthlyExpenses(parseInt(chartPeriod)),
-        transactionService.getTransactions()
+        transactionService.getTransactions(),
+        accountService.getAccounts()
       ])
 
       // Atualizar estados
@@ -60,6 +62,7 @@ function Home() {
       setTotalExpenses(expensesValue)
       setTotalSaved(savedValue)
       setMonthlyExpenses(monthlyData || [])
+      setAccounts(accountsData || [])
 
       // Processar transações
       const processedTransactions = (transactionsData || [])
@@ -111,9 +114,15 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#140A23] flex relative">
       {/* Sidebar */}
-      <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 animate-slide-in-left z-10">
-        {/* Logo placeholder */}
-        <div className="w-12 h-12 bg-white rounded-lg mb-8"></div>
+      <div className="w-20 bg-[#7802D6] fixed left-0 top-0 h-screen flex flex-col items-center py-6 rounded-r-2xl animate-slide-in-left z-10">
+        {/* Logo */}
+        <div className="w-12 h-12 rounded-lg overflow-hidden mb-8 bg-[#7802D6]">
+          <img
+            src="/images/logo/logofirebudget.png"
+            alt="FireBudget"
+            className="w-full h-full object-contain"
+          />
+        </div>
         
         {/* Menu Icons */}
         <div className="flex flex-col gap-6 flex-1">
@@ -144,6 +153,15 @@ function Home() {
           <button className="text-white hover:text-purple-300 transition">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </button>
+          
+          <button 
+            onClick={() => navigate('/about')}
+            className="text-white hover:text-[#00FFB2] transition"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5V4H2v16h5m10 0V10a3 3 0 00-3-3H10a3 3 0 00-3 3v10m10 0H7" />
             </svg>
           </button>
           
@@ -402,9 +420,41 @@ function Home() {
                       <span className="text-xl font-bold text-[#140A23]">+</span>
                     </button>
                   </div>
-                  <div className="bg-white rounded-lg h-48 flex items-center justify-center text-gray-400">
-                    <p className="text-sm">Adicione um cartão</p>
-                  </div>
+                  
+                  {accounts.length > 0 ? (
+                    <div className="bg-white rounded-lg h-48 overflow-y-auto p-2 space-y-2 text-gray-800 scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent">
+                      {accounts.map((account) => (
+                        <div key={account.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-100 last:border-0">
+                          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200">
+                            {account.connector?.imageUrl ? (
+                              <img 
+                                src={account.connector.imageUrl} 
+                                alt={account.name} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-lg">🏦</span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-900 truncate" title={account.name}>
+                              {account.name}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {account.type || 'Conta'} • {account.number || '****'}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-bold text-gray-900">{formatCurrency(account.balance)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-lg h-48 flex items-center justify-center text-gray-400">
+                      <p className="text-sm">Adicione um cartão</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Buttons */}

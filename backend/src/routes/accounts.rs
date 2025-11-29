@@ -130,3 +130,62 @@ pub async fn get_monthly_expenses(
 
     Ok(Json(monthly_expenses))
 }
+
+#[derive(Debug, Serialize)]
+pub struct AccountResponse {
+    pub id: uuid::Uuid,
+    pub name: String,
+    pub balance: Decimal,
+    pub currency: String,
+    #[serde(rename = "type")]
+    pub type_: Option<String>,
+    pub number: Option<String>,
+    pub item_id: uuid::Uuid,
+    pub connector: Option<serde_json::Value>,
+}
+
+#[get("/accounts")]
+pub async fn get_accounts(
+    user: AuthenticatedUser,
+    pool: &State<PgPool>,
+) -> Result<Json<Vec<AccountResponse>>, Status> {
+    let accounts = sqlx::query!(
+        r#"
+        SELECT 
+            a.id, 
+            a.name, 
+            a.balance, 
+            a.currency, 
+            a.type as "type_", 
+            a.number,
+            a.item_id,
+            i.connector as "connector?"
+        FROM accounts a
+        INNER JOIN items i ON a.item_id = i.id
+        WHERE i.user_id = $1
+        "#,
+        user.id
+    )
+    .fetch_all(pool.inner())
+    .await
+    .map_err(|e| {
+        eprintln!("Erro ao buscar contas: {}", e);
+        Status::InternalServerError
+    })?;
+
+    let response = accounts
+        .into_iter()
+        .map(|row| AccountResponse {
+            id: row.id,
+            name: row.name.unwrap_or_else(|| "Conta sem nome".to_string()),
+            balance: row.balance.unwrap_or(Decimal::ZERO),
+            currency: row.currency.unwrap_or_else(|| "BRL".to_string()),
+            type_: row.type_,
+            number: row.number,
+            item_id: row.item_id.unwrap(), // item_id is not null in DB schema but join might make it nullable if not careful, but here inner join
+            connector: row.connector,
+        })
+        .collect();
+
+    Ok(Json(response))
+}

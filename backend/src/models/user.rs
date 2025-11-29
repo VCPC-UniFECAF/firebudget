@@ -32,6 +32,7 @@ impl User {
 #[derive(Debug, Deserialize)]
 pub struct NewUser {
     pub email: String,
+    #[serde(rename = "fullName")]
     pub full_name: String,
     pub password: String,
 }
